@@ -3,7 +3,7 @@ import os
 from tkinter import *
 PINK = "#e2979c"
 RED = "#e7305b"
-GREEN = "#9bdeac"
+GREEN = "#379b46"
 YELLOW = "#f7f5dd"
 FONT_NAME = "Courier"
 WORK_MIN = 25 # 25-minute work
@@ -15,12 +15,22 @@ dir_path = os.path.dirname(os.path.abspath(__file__)) # get the path of the curr
 
 window = Tk() # create a window
 reps = 0
+timer = None
 
 
-# timer mechanism
+def timer_reset():
+    """
+    timer reset mechanism
+    """
+    window.after_cancel(timer) # stop the timer
+    canvas.itemconfig(timer_text, text="00:00") # reset the timer label
+    timer_title_label.config(text="⏱️Focus") # reset the timer title label
+    check_label.config(text="") # reset the checkmarks label
+    global reps
+    reps = 0 # reset the reps
 def timer_start():
     """
-    timer start
+    timer start mechanism
     """
     global reps
     work_sec = WORK_MIN * 60
@@ -31,28 +41,22 @@ def timer_start():
 
     if reps % 8 == 0: # if the reps is 8th
         countdown(long_break_sec)  # count down from 20 minutes (long break)
-        timer_title_label.config(text="Break", fg=RED) # change the text of the timer label
+        timer_title_label.config(text="Long Break", fg=PINK) # change the text of the timer label
 
     elif reps % 2 == 0: # if the reps is even
         countdown(short_break_sec) # count down from 5 minutes (short break)
-        timer_title_label.config(text="Break", fg=PINK) # change the text of the timer label
+        timer_title_label.config(text="Short Break", fg=GREEN) # change the text of the timer label
 
     else: # if the reps is odd
         countdown(work_sec)  # count down from 25 minutes (work)
-        timer_title_label.config(text="Work", fg=GREEN) # change the text of the timer label
-def timer_reset():
-    """
-    timer reset
-    :return:
-    """
-    pass
-
-# countdown mechanism
+        timer_title_label.config(text="Work", fg=RED) # change the text of the timer label
 def countdown(count):
     """
-    countdown function
+    countdown mechanism function
     :param count: countdown time
     """
+    global timer
+
     count_min = math.floor(count / 60) # calculate the minutes
     count_sec = count % 60 # calculate the seconds
 
@@ -62,14 +66,14 @@ def countdown(count):
     canvas.itemconfig(timer_text, text=f"{count_min}:{count_sec}") # update the text of the timer label
 
     if count > 0: # if the countdown time is greater than 0
-        window.after(1000, countdown, count - 1) # call the function after 1 second
+        timer = window.after(1000, countdown, count - 1) # call the function after 1 second
     else: # if the countdown time is 0
         timer_start() # call the function to start the timer
 
         mark = ""
         work_session = math.floor(reps / 2) # number of work sessions completed
         for _ in range(work_session): # for each work session completed
-            mark += "✓" # add a checkmark
+            mark += "✅" # add a checkmark
         check_label.config(text=mark) # add checkmarks to the label
 
 # UI setup
@@ -98,7 +102,7 @@ def create_labels():
     """
     global timer_title_label, check_label
 
-    timer_title_label = Label(text="Timer", font=(FONT_NAME, 50), fg=GREEN, bg=YELLOW) # create the label
+    timer_title_label = Label(text="️Focus", font=(FONT_NAME, 40), fg=GREEN, bg=YELLOW) # create the label
     timer_title_label.grid(column=1, row=0) # place the label on the window
 
     check_label = Label(font=(FONT_NAME, 30), fg=GREEN, bg=YELLOW) # create the label
@@ -107,10 +111,10 @@ def create_btns():
     """
     create the buttons, set the text, and place them on the window
     """
-    start_btn = Button(text="Start", command=timer_start, bg=YELLOW, highlightthickness=0) # create the button
+    start_btn = Button(text="▶️Start", command=timer_start, bg=YELLOW, highlightthickness=0) # create the button
     start_btn.grid(column=0, row=2) # place the button on the window
 
-    reset_btn = Button(text="Reset", command=timer_reset, bg=YELLOW, highlightthickness=0)  # create the button
+    reset_btn = Button(text="🔄Reset", command=timer_reset, bg=YELLOW, highlightthickness=0)  # create the button
     reset_btn.grid(column=2, row=2) # place the button on the window
 
 create_window() # call the function to create the window
