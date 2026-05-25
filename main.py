@@ -66,6 +66,12 @@ def countdown(count):
     else: # if the countdown time is 0
         timer_start() # call the function to start the timer
 
+        mark = ""
+        work_session = math.floor(reps / 2) # number of work sessions completed
+        for _ in range(work_session): # for each work session completed
+            mark += "✓" # add a checkmark
+        check_label.config(text=mark) # add checkmarks to the label
+
 # UI setup
 def create_window():
     """
@@ -90,12 +96,12 @@ def create_labels():
     """
     create the labels, set the text, and place them on the window
     """
-    global timer_title_label
+    global timer_title_label, check_label
 
     timer_title_label = Label(text="Timer", font=(FONT_NAME, 50), fg=GREEN, bg=YELLOW) # create the label
     timer_title_label.grid(column=1, row=0) # place the label on the window
 
-    check_label = Label(text="✓", font=(FONT_NAME, 30), fg=GREEN, bg=YELLOW) # create the label
+    check_label = Label(font=(FONT_NAME, 30), fg=GREEN, bg=YELLOW) # create the label
     check_label.grid(column=1, row=3) # place the label on the window
 def create_btns():
     """
