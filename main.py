@@ -33,8 +33,22 @@ def create_canvas():
     canvas.tomato_img = tomato_img # assign the image to a variable
     canvas.create_image(100, 112, image=tomato_img) # place the image
     canvas.create_text(100, 130, text="00:00", fill="white", font=(FONT_NAME, 35, "bold"))
-    canvas.pack() # place the canvas
+    canvas.grid(column=1, row=1) # place the canvas
+def create_labels():
+    """
+    create the labels, set the text, and place them on the window
+    """
+    timer_title_label = Label(text="Timer", font=(FONT_NAME, 60)) # create the label
+    timer_title_label.grid(column=1, row=0) # place the label on the window
+    timer_title_label.config(fg=GREEN) # set the color of the label
+    timer_title_label.config(bg=YELLOW) # set the background color of the label
+
+    check_label = Label(text="✓", font=(FONT_NAME, 30)) # create the label
+    check_label.grid(column=1, row=3) # place the label on the window
+    check_label.config(fg=GREEN) # set the color of the label
+    check_label.config(bg=YELLOW) # set the background color of the label
 
 create_window() # call the function to create the window
 create_canvas() # call the function to create the canvas
+create_labels() # call the function to create the labels
 window.mainloop() # continuously run the program
