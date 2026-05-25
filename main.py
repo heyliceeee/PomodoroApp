@@ -1,7 +1,6 @@
 import math
 import os
 from tkinter import *
-import time
 PINK = "#e2979c"
 RED = "#e7305b"
 GREEN = "#9bdeac"
@@ -15,7 +14,7 @@ IMAGE = "/data/tomato.png"
 dir_path = os.path.dirname(os.path.abspath(__file__)) # get the path of the current file
 
 window = Tk() # create a window
-
+reps = 0
 
 
 # timer mechanism
@@ -23,7 +22,24 @@ def timer_start():
     """
     timer start
     """
-    countdown(5 * 60) # start the countdown in 5 seconds
+    global reps
+    work_sec = WORK_MIN * 60
+    short_break_sec = SHORT_BREAK_MIN * 60
+    long_break_sec = LONG_BREAK_MIN * 60
+
+    reps += 1 # increase the reps by 1
+
+    if reps % 8 == 0: # if the reps is 8th
+        countdown(long_break_sec)  # count down from 20 minutes (long break)
+        timer_title_label.config(text="Break", fg=RED) # change the text of the timer label
+
+    elif reps % 2 == 0: # if the reps is even
+        countdown(short_break_sec) # count down from 5 minutes (short break)
+        timer_title_label.config(text="Break", fg=PINK) # change the text of the timer label
+
+    else: # if the reps is odd
+        countdown(work_sec)  # count down from 25 minutes (work)
+        timer_title_label.config(text="Work", fg=GREEN) # change the text of the timer label
 def timer_reset():
     """
     timer reset
@@ -47,6 +63,8 @@ def countdown(count):
 
     if count > 0: # if the countdown time is greater than 0
         window.after(1000, countdown, count - 1) # call the function after 1 second
+    else: # if the countdown time is 0
+        timer_start() # call the function to start the timer
 
 # UI setup
 def create_window():
@@ -72,6 +90,8 @@ def create_labels():
     """
     create the labels, set the text, and place them on the window
     """
+    global timer_title_label
+
     timer_title_label = Label(text="Timer", font=(FONT_NAME, 50), fg=GREEN, bg=YELLOW) # create the label
     timer_title_label.grid(column=1, row=0) # place the label on the window
 
