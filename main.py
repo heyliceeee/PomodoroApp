@@ -1,5 +1,7 @@
+import math
 import os
 from tkinter import *
+import time
 PINK = "#e2979c"
 RED = "#e7305b"
 GREEN = "#9bdeac"
@@ -15,18 +17,36 @@ dir_path = os.path.dirname(os.path.abspath(__file__)) # get the path of the curr
 window = Tk() # create a window
 
 
+
+# timer mechanism
 def timer_start():
     """
     timer start
-    :return:
     """
-    pass
+    countdown(5 * 60) # start the countdown in 5 seconds
 def timer_reset():
     """
     timer reset
     :return:
     """
     pass
+
+# countdown mechanism
+def countdown(count):
+    """
+    countdown function
+    :param count: countdown time
+    """
+    count_min = math.floor(count / 60) # calculate the minutes
+    count_sec = count % 60 # calculate the seconds
+
+    if count_sec < 10: # if the seconds are less than 10, add a leading zero
+        count_sec = f"0{count_sec}"
+
+    canvas.itemconfig(timer_text, text=f"{count_min}:{count_sec}") # update the text of the timer label
+
+    if count > 0: # if the countdown time is greater than 0
+        window.after(1000, countdown, count - 1) # call the function after 1 second
 
 # UI setup
 def create_window():
@@ -40,12 +60,13 @@ def create_canvas():
     """
     create a canvas
     """
+    global canvas, timer_text
     tomato_img = PhotoImage(file=dir_path + IMAGE)  # create an image
 
     canvas = Canvas(width=200, height=224, bg=YELLOW, highlightthickness=0) # create a canvas
     canvas.tomato_img = tomato_img # assign the image to a variable
     canvas.create_image(100, 112, image=tomato_img) # place the image
-    canvas.create_text(100, 130, text="00:00", fill="white", font=(FONT_NAME, 35, "bold"))
+    timer_text = canvas.create_text(100, 130, text="00:00", fill="white", font=(FONT_NAME, 35, "bold"))
     canvas.grid(column=1, row=1) # place the canvas
 def create_labels():
     """
@@ -65,7 +86,7 @@ def create_btns():
 
     reset_btn = Button(text="Reset", command=timer_reset, bg=YELLOW, highlightthickness=0)  # create the button
     reset_btn.grid(column=2, row=2) # place the button on the window
-    
+
 create_window() # call the function to create the window
 create_canvas() # call the function to create the canvas
 create_labels() # call the function to create the labels
