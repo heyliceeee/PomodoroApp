@@ -22,6 +22,19 @@ def create_window():
     window.title("Pomodoro") # set the title of the window
     window.config(padx=100, pady=50) # set the padding of the window\
     window.config(bg=YELLOW) # set the background color of the window
+def create_canvas():
+    """
+    create a canvas
+    """
+    canvas = Canvas(width=200, height=224) # create a canvas
+    canvas.config(bg=YELLOW, highlightthickness=0) # set the background color of the canvas
 
-create_window() # call the create_window function
+    tomato_img = PhotoImage(file=dir_path + IMAGE) # create an image
+    canvas.tomato_img = tomato_img # assign the image to a variable
+    canvas.create_image(100, 112, image=tomato_img) # place the image
+    canvas.create_text(100, 130, text="00:00", fill="white", font=(FONT_NAME, 35, "bold"))
+    canvas.pack() # place the canvas
+
+create_window() # call the function to create the window
+create_canvas() # call the function to create the canvas
 window.mainloop() # continuously run the program
